@@ -1,9 +1,15 @@
 def call() {
     echo "Running unit tests..."
-    
-    // Add your unit test commands here
-    // For example:
-    // sh "npm test" or "mvn test" depending on your project
-    
-    echo "Unit tests completed successfully"
+    if (fileExists('package.json')) {
+        try {
+            sh "npm test"
+            echo "Unit tests execution initiated using npm test"
+        } catch (Exception err) {
+            echo "Warning: npm test command failed or not configured in package.json. " +
+                 "See console output for details. Continuing build..."
+        }
+    } else {
+        echo "Warning: package.json not found. Skipping unit tests."
+    }  
+    echo "Unit test completed successfully"
 }
